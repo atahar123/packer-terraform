@@ -1,43 +1,43 @@
-# Node App Environment
+# NodeApp Packer linking to Terraform
 
 ## Prerequisites:
-- Vagrant
-- VirtualBox
-- All other dependencies are installed from the provisions, you don't need anything else.
+- Chef
+- AWS CLI
+- Git
+- Your own .pem key
 
 ## How to clone this repo:
 In your terminal, please type in the following:
 ```
-git clone git@github.com:atahar123/DevEnv.git
+git clone git@github.com:atahar123/packer-terraform.git
 ```
 
-### To run the app:
-- On the directory:
+### Lines to change
+- Change the following to your own .pem key, its path.
+- Change the AMI name to your name.
 ```
-vagrant up
-vagrant ssh app
-cd ..
-cd ubuntu/
-cd app
-cd seeds
-node seed.js
-cd ..
-npm start
+13     "ssh_keypair_name": "atahar-eng54",
+14     "ssh_private_key_file": "~/.ssh/atahar-eng54.pem",
+31     "ami_name": "atahar-terraform"
 ```
 
-### After starting, you should see the following:
-"Your app is ready and listening on port 3000"
+# How to install
+Run the following to link the ```node``` cookbook locally. You must do this:
+```
+berks vendor
+```
+
+Next, validate the packer:
+```
+packer validate packer_nodejs.json
+```
+This should show a successful message.
 
 
-### To view the app:
-- Go to your chosen browser
-- type in the following:
+Next, build the AMI:
 ```
-development.local
+packer build packer_nodejs.json
 ```
-You should see the Sparta Global logo. This means it is working.
 
-- To see the posts, type in:
-```
-development.local/posts
-```
+
+Once that's done, you should go to AMIs in AWS and put in the name you had in line 31.
